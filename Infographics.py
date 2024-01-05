@@ -10,22 +10,16 @@ import matplotlib.pyplot as plt
 
 
 def readFile(filename,yr):
-    """ function to read and clean a World Bank file
+    """ function to read and clean a World Bank files
 
     Args:
         filename (string): filepath to the World Bank file
-        cntry_list (list): list of selected Countries
-        indicator (string): indicator selected
+        yr (list): list of years to be dropped from the dataframe
 
     Returns:
-        final_df (dataframe): clean dataframe of selected indicator in
-            selected countries for selected years having years as columns
-        trans_df (dataframe): transposed dataframe of final_df having
-                            countries as columns
+        final_df (dataframe): clean dataframe with selected years
     """
     df = pd.read_csv(filename, skiprows=2, header=1)  # read the data
-    # filtering the data with country and indicators
-    #ref_df = df[(df['Country Name'].isin(cntry))]
     # dropping the unwanted columns
     ref_df = df.drop(df.columns[1:4], axis=1)
     ref_df = ref_df.drop(df.columns[-1:], axis=1)
@@ -35,19 +29,19 @@ def readFile(filename,yr):
     final_df = final_df.reset_index(drop=True)
     return final_df
 
-co2_file='co2.csv'
-ele_heat='ele_heat.csv'
-manuf='manuf.csv'
-oth_sectors='oth_sectors.csv'
-transport='transport.csv'
-building='building.csv'
-renew_cons='renew_cons.csv'
-forest='forest_land.csv'
-hydro='hydro_electric.csv'
-ogc='oil_gas_coal.csv'
-renew='renew.csv'
-nucl='nuclear.csv'
-renew_prod=pd.read_csv('modern-renewable-prod.csv')
+co2_file='Data/co2.csv'
+ele_heat='Data/ele_heat.csv'
+manuf='Data/manuf.csv'
+oth_sectors='Data/oth_sectors.csv'
+transport='Data/transport.csv'
+building='Data/building.csv'
+renew_cons='Data/renew_cons.csv'
+forest='Data/forest_land.csv'
+hydro='Data/hydro_electric.csv'
+ogc='Data/oil_gas_coal.csv'
+renew='Data/renew.csv'
+nucl='Data/nuclear.csv'
+renew_prod=pd.read_csv('Data/modern-renewable-prod.csv')
 
 
 cntry_list=['China']
@@ -82,13 +76,9 @@ colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#e7
 
 
 
-
 fig=plt.figure(figsize=(18, 18),facecolor='#F0F0F0')
 plt.suptitle('CO2 Emission, Sources and Energy Analysis in China',fontsize=28,y=0.94,fontweight='bold')
 
-#plt.subplots_adjust(top=0.95, bottom=0.05, left=0.1, right=0.9, hspace=0.5, wspace=0.3)
-#text='hloooooooooooooooooooooooooooooooooo'
-#plt.text(0.5, 0.02, text, horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes, fontsize=12)
 
 co2_china=co2[co2['Country Name']=='China']
 co2_china_yr=co2_china.iloc[:,1:]
@@ -106,8 +96,6 @@ plt.ylabel('CO2 emissions(kt)',fontsize=13)
 plt.xlabel('Year',fontsize=13)
 plt.ylim(9000000,11080000)
 plt.legend()
-
-
 
 
 dfs = [build_df,manuf_df, oth_sectors_df, transport_df, ele_heat_df]
@@ -204,31 +192,3 @@ plt.savefig('22029960.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 
-
-
-
-#yr_bub=[str(year) for year in range(2011, 2020)]
-
-#co2_bub=co2.drop(columns=yr_bub)
-#co2_df=co2_bub[(co2_bub['Country Name'].isin(cntry_list))]
-#gdp_df=gdp[(gdp['Country Name'].isin(cntry_list))]
-#pop_df=pop[(pop['Country Name'].isin(cntry_list))]
-
-
-#mer_df=pd.merge(gdp_df,pop_df,on='Country Name')
-#mer_df=pd.merge(mer_df,co2_df,on='Country Name')
-#mer_df
-
-#plt.figure(figsize=(10,6))
-#scatter=plt.scatter(mer_df['2020_x'],mer_df['2020'],
- #                   c='blue',alpha=0.7)
-#plt.show()
-#plt.figure(2)
-#plt.pie(lst, labels=src_list, autopct='%1.1f%%', startangle=90,
- #       pctdistance=0.8, explode=(0, 0, 0, 0, 0, 0),
-  #      wedgeprops={"edgecolor": "white", "linewidth": 2,
-   #                 "antialiased": True})
-# labeling and saving the figure
-#plt.title('Electricity production from Different Sources in Brazil')
-#plt.savefig('Pieplot.png')
-#plt.show()
