@@ -38,13 +38,10 @@ def Infographic(country, text, name):
         text (string): analysed report
         name (string): name and id
     """
-    build_df = build[(build['Country Name'] == country)]
-    manuf_df = manuf[(manuf['Country Name'] == country)]
-    oth_sectors_df = oth_sectors[(oth_sectors['Country Name'] == country)]
-    transport_df = transport[(transport['Country Name'] == country)]
-    ele_heat_df = ele_heat[(ele_heat['Country Name'] == country)]
-    renew_df = renew_cons[(renew_cons['Country Name'] == country)]
-
+    #defining colours list
+    colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12',
+          '#9b59b6', '#1abc9c', '#e74c3c', '#2ecc71']
+    #initializing the figure
     fig = plt.figure(figsize=(18, 18), facecolor='#F0F0F0')
     plt.suptitle('CO2 Emission, Sources and Energy Analysis in China',
                  fontsize=28, y=0.94, fontweight='bold')
@@ -71,6 +68,13 @@ def Infographic(country, text, name):
     plt.ylim(9000000, 11080000)
     plt.legend()
 
+    #filtering the desired country from dfs
+    build_df = build[(build['Country Name'] == country)]
+    manuf_df = manuf[(manuf['Country Name'] == country)]
+    oth_sectors_df = oth_sectors[(oth_sectors['Country Name'] == country)]
+    transport_df = transport[(transport['Country Name'] == country)]
+    ele_heat_df = ele_heat[(ele_heat['Country Name'] == country)]
+    renew_df = renew_cons[(renew_cons['Country Name'] == country)]
     dfs = [build_df, manuf_df, oth_sectors_df, transport_df, ele_heat_df]
     china_data = [df.loc[df['Country Name'] == country, '2014'].values[0]
                   for df in dfs]
@@ -151,7 +155,7 @@ def Infographic(country, text, name):
     plt.text(0.73, 0.24, text, ha='center', va='center',
              transform=plt.gcf().transFigure, fontsize=14,
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
-    plt.text(0.73, 0.122, name, ha='center', va='center',
+    plt.text(0.73, 0.113, name, ha='center', va='center',
              transform=plt.gcf().transFigure, fontsize=14,
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
     plt.savefig('22029960.png', dpi=300, bbox_inches='tight')
@@ -192,25 +196,26 @@ nucl = readFile(nucl, yr_co2)
 renew_cons = readFile(renew_cons, yr_co2)
 
 
-colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12',
-          '#9b59b6', '#1abc9c', '#e74c3c', '#2ecc71']
+
 
 
 text = """ 
-This infographics explores the CO2 emission and its major sources in the highest
-Co2 emitting country China, over several years. The first plot shows the drastic 
-increase in China’s co2 emission from the numeric of 9 million kilotons to nearly 
-11 million kilotons. Looking into the major sources of co2 emission, 2014 data 
-shows that more than half (ie., 52.3%) of the emission is from the electricity 
-and heat production and the second pie chart show its reason because 75% of the 
-electricity in China (2014) is produced from oil, gas and coal which contributes 
-to the high emission of co2. But it also shows how China looks into tackling this 
-issue by adopting renewable energy sources including hydroelectricity which 
-contributes to 4.1% and 18.6% of energy production respectively. Thus, China shows
-a sustainable move although at a slower rate in increasing the renewable energy 
-consumption from 11.34% to 14.81% of the total energy consumption from 2011 to 
-2020 and according to 2022 the major renewable energy sources used by China are 
-Hydroelectricity followed by wind energy."""
+This infographic examines CO2 emissions over a number of years and their 
+primary sources in China, the nation with the largest CO2 emissions. China's
+CO2 emissions increased sharply from 9 million kilotons to around 11 million 
+kilotons, as shown in the first plot(2011-2020). When analyzing the primary 
+sources of CO2 emissions, data from 2014 indicates that the production of 
+electricity and heat accounts for more than half (i.e., 52.3%) of emissions.
+The second pie chart shows that in 2014,coal, oil, and gas accounted for 75% 
+of China's power generation, which raises CO2 emissions.
+However, it also demonstrates how China is approaching this problem by 
+utilizing renewable energy sources, such as hydroelectricity, which accounts 
+for 18.6% of the country's energy production and 4.1% from other renewable 
+sources. China's renewable energy consumption increased from 11.34% to 14.81% 
+of total energy consumption between 2011 and 2020, demonstrating a sustained 
+trend but at a slower pace. And according to 2022, hydroelectricity and wind 
+energy are China's two main sources of renewable energy which uphold China's 
+step towards sustainable development."""
 
 name = """ Name : Sandra Binu
       Student ID : 22029960 """
