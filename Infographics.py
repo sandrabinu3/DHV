@@ -2,7 +2,7 @@
 """
 Created on Sat Dec 30 13:44:56 2023
 
-@author: bc975789
+@author: sandra
 """
 import numpy as np
 import pandas as pd
@@ -38,17 +38,19 @@ def Infographic(country, text, name):
         text (string): analysed report
         name (string): name and id
     """
-    #defining colours list
-    colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12',
-          '#9b59b6', '#1abc9c', '#e74c3c', '#2ecc71']
-    #initializing the figure
+    
+    # initializing the figure
     fig = plt.figure(figsize=(18, 18), facecolor='#F0F0F0')
     plt.suptitle('CO2 Emission, Sources and Energy Analysis in China',
                  fontsize=28, y=0.94, fontweight='bold')
 
+    #filtering the country and years
     co2_china = co2[co2['Country Name'] == country]
     co2_china_yr = co2_china.iloc[:, 1:]
     co2_china_series = co2_china_yr.squeeze()
+    # defining colours list
+    colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12',
+              '#9b59b6', '#1abc9c', '#e74c3c', '#2ecc71']
 
     # barchart
     plt.subplot(3, 2, 1)
@@ -68,7 +70,7 @@ def Infographic(country, text, name):
     plt.ylim(9000000, 11080000)
     plt.legend()
 
-    #filtering the desired country from dfs
+    # filtering the desired country from dfs
     build_df = build[(build['Country Name'] == country)]
     manuf_df = manuf[(manuf['Country Name'] == country)]
     oth_sectors_df = oth_sectors[(oth_sectors['Country Name'] == country)]
@@ -85,8 +87,9 @@ def Infographic(country, text, name):
     # Pieplot1
     plt.subplot(3, 2, 2)
     plt.pie(china_data, autopct='%1.1f%%',
-            pctdistance=0.8, startangle=90, explode=(0, 0, 0, 0, 0.03), 
-            colors=colors[3:], wedgeprops=dict(width=0.5))
+            pctdistance=0.8, startangle=90, explode=(0, 0, 0, 0, 0.03),
+            colors=colors[3:], wedgeprops=dict(width=0.5),
+            textprops={'fontweight':'bold','fontsize':12})
     plt.title('China\'s CO2 Emission sources Distribution (2014)',
               fontweight='bold', fontsize=16)
     plt.legend(labels=sources1, loc='best', bbox_to_anchor=(
@@ -99,8 +102,8 @@ def Infographic(country, text, name):
     sources = ['Hydro', 'Renewable Sources', 'Oil, Gas & Coal', 'Nuclear']
     plt.subplot(3, 2, 3)
     plt.pie(china_pie, autopct='%1.1f%%', startangle=180,
-            pctdistance=0.8, explode=(0.05, 0.1, 0, 0), colors=colors[3:], 
-            wedgeprops=dict(width=0.5))
+            pctdistance=0.8, explode=(0.05, 0.1, 0, 0), colors=colors[3:],
+            wedgeprops=dict(width=0.5),textprops={'fontweight':'bold','fontsize':12})
     plt.title('Electricity Production Distribution in China (2014)',
               fontweight='bold', fontsize=16)
     plt.legend(labels=sources, loc='best', bbox_to_anchor=(
@@ -121,7 +124,7 @@ def Infographic(country, text, name):
             else:
                 plt.text(year, value + 0.1, f'{value:.2f}%',
                          ha='center', va='bottom', color='black', fontsize=10)
-    plt.title('Renewable energy consumption\n(% of total final energy consumption)',
+    plt.title('Renewable Energy Consumption\n(% of total final energy consumption)',
               fontweight='bold', fontsize=16)
     plt.xlabel('Year', fontsize=13)
     plt.ylabel('Renewable Enegry Consumption(%)', fontsize=13)
@@ -135,14 +138,11 @@ def Infographic(country, text, name):
                               'Electricity from hydro - TWh',
                               'Electricity from solar - TWh',
                               'Other renewables including bioenergy - TWh']]
-    # bar_data = bar_data.transpose()
     bar_values = bar_data.unstack().values.tolist()
-    # colors=['blue', 'green', 'yellow', 'orange']
     renew_sources = ['Wind', 'Hydro', 'Solar',
                      'Other Sources\nincluding Bioenergy']
     plt.subplot(3, 2, 5)
     bars = plt.barh(renew_sources, bar_values, color=colors[3:])
-    # bar_data.plot(kind='barh', legend=False)
     plt.title('Renewable Energy Sources in China 2022',
               fontweight='bold', fontsize=16)
     plt.xlabel('Electricity (TWh)', fontsize=13)
@@ -152,16 +152,18 @@ def Infographic(country, text, name):
         plt.text(bar.get_width(), bar.get_y() + bar.get_height() / 2, f'{value:.2f}',
                  va='center', ha='left', fontsize=12, fontweight='bold')
 
+    #writing description and name
     plt.text(0.73, 0.24, text, ha='center', va='center',
              transform=plt.gcf().transFigure, fontsize=14,
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
     plt.text(0.73, 0.113, name, ha='center', va='center',
              transform=plt.gcf().transFigure, fontsize=14,
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
+    #saving the figure
     plt.savefig('22029960.png', dpi=300, bbox_inches='tight')
-    
 
 
+#filepaths
 co2_file = 'Data/co2.csv'
 ele_heat = 'Data/ele_heat.csv'
 manuf = 'Data/manuf.csv'
@@ -175,14 +177,14 @@ renew = 'Data/renew.csv'
 nucl = 'Data/nuclear.csv'
 renew_prod = pd.read_csv('Data/modern-renewable-prod.csv')
 
-
-cntry = 'China'
+#filtering years
 yr_co2 = [str(year) for year in range(1960, 2011)] + [str(year)
                                                       for year in range(2021, 2023)]
 yr_pie = [str(year) for year in range(1960, 2014)] + [str(year)
                                                       for year in range(2015, 2023)]
 yr_null = []
 
+#reading the dfs
 co2 = readFile(co2_file, yr_co2)
 ele_heat = readFile(ele_heat, yr_pie)
 manuf = readFile(manuf, yr_pie)
@@ -195,29 +197,25 @@ renew = readFile(renew, yr_co2)
 nucl = readFile(nucl, yr_co2)
 renew_cons = readFile(renew_cons, yr_co2)
 
-
-
-
-
+#description on the infographics
 text = """ 
-This infographic examines CO2 emissions over a number of years and their 
-primary sources in China, the nation with the largest CO2 emissions. China's
-CO2 emissions increased sharply from 9 million kilotons to around 11 million 
-kilotons, as shown in the first plot(2011-2020). When analyzing the primary 
-sources of CO2 emissions, data from 2014 indicates that the production of 
-electricity and heat accounts for more than half (i.e., 52.3%) of emissions.
-The second pie chart shows that in 2014,coal, oil, and gas accounted for 75% 
-of China's power generation, which raises CO2 emissions.
-However, it also demonstrates how China is approaching this problem by 
-utilizing renewable energy sources, such as hydroelectricity, which accounts 
-for 18.6% of the country's energy production and 4.1% from other renewable 
-sources. China's renewable energy consumption increased from 11.34% to 14.81% 
-of total energy consumption between 2011 and 2020, demonstrating a sustained 
-trend but at a slower pace. And according to 2022, hydroelectricity and wind 
-energy are China's two main sources of renewable energy which uphold China's 
-step towards sustainable development."""
+This infographics highlights China's CO2 emissions trends from 2011 to 
+2020. Emissions rose from 9.2 to around 11 million kilotons during this 
+period. In 2014, electricity and heat production contributedthe most, 
+52.3% of CO2 emissions. The second pie chart reveals that oil, gas and 
+coal constituted 75% of China's power generation in 2014, leading to 
+increased CO2 emissions.China is addressing this issue by increasing the 
+use of renewable energy sources. Notably, 18.6% of China's energy came 
+from hydroelectricity, with 4.1% from other renewables in 2014. Over 
+2011-2020, China increased renewable energy consumption from 11.34% 
+to 14.81%. By 2022, hydroelectricity and wind emerged as the primary 
+renewable sources, showcasing China's commitment to sustainable 
+development.
+"""
 
+#name and id
 name = """ Name : Sandra Binu
       Student ID : 22029960 """
 
+#calling the function
 Infographic('China', text, name)
