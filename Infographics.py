@@ -24,9 +24,7 @@ def readFile(filename,sheetname, yr):
     # dropping the unwanted columns
     columns_to_drop = ['Country Code', 'Indicator Name', 'Indicator Code']
     ref_df = df.drop(columns=columns_to_drop)
-    #ref_df = ref_df.drop(df.columns[-1:])
     # filtering the years
-    #print(ref_df.columns)
     final_df = ref_df.drop(columns=yr)
     # reseting the index
     final_df = final_df.reset_index(drop=True)
@@ -158,11 +156,11 @@ def Infographic(country, text, name):
                  va='center', ha='left', fontsize=12, fontweight='bold')
 
     #writing description and name
-    plt.text(0.5, 0.23, text, ha='left', va='center',
+    plt.text(0.5, 0.2325, text, ha='left', va='center',
              transform=plt.gcf().transFigure, fontsize=14,
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
-    plt.text(0.73, 0.105, name, ha='center', va='center',
-             transform=plt.gcf().transFigure, fontsize=14,
+    plt.text(0.75, 0.105, name, ha='center', va='center',
+             transform=plt.gcf().transFigure, fontsize=14, fontweight='bold',
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
     #saving the figure
     plt.savefig('22029960.png', dpi=300, bbox_inches='tight')
@@ -196,21 +194,21 @@ renew_cons = readFile(data_file,'renew_cons', yr_co2)
 
 #description on the infographics
 text = """ This infographics highlights China's CO2 emissions trends from 2011 to 2020.
-> Emissions rose from 9.2 to around 11 million kilotons during this period. 
-> In 2014, electricity and heat production contributed the most, 52.3% of 
-   CO2 emissions. 
-> The electricity production distribution in China reveals that oil, gas 
-   and coal constituted 75% of China's power generation in 2014, leading to 
-   increased CO2 emissions.
+-> Emissions rose from 9.2 to around 11 million kilotons during this period. 
+-> In 2014, electricity and heat production contributed the most, 52.3% of 
+    CO2 emissions. 
+-> The electricity production distribution in China reveals that oil, gas 
+    and coal constituted 75% of China's power generation in 2014, leading to 
+    increased CO2 emissions.
 
 China is addressing this issue by increasing the use of renewable energy 
 sources. 
-> Notably, 18.6% of China's energy came from hydroelectricity, and 4.1% 
-   from other renewables in 2014. 
-> Over 2011-2020, China increased renewable energy consumption from 
-   11.34% to 14.81%. 
-> By 2022, hydroelectricity and wind emerged as the primary renewable 
-   sources, showcasing China's commitment to sustainable development."""
+-> Notably, 18.6% of China's energy came from hydroelectricity, and 4.1% 
+    from other renewables in 2014. 
+-> Over 2011-2020, China increased renewable energy consumption from 
+    11.34% to 14.81%. 
+-> By 2022, hydroelectricity and wind emerged as the primary renewable 
+    sources, showcasing China's commitment to sustainable development."""
 
 #name and id
 name = """ Name : Sandra Binu
