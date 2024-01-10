@@ -9,21 +9,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def readFile(filename, yr):
+def readFile(filename,sheetname, yr):
     """ function to read and clean a World Bank files
 
     Args:
         filename (string): filepath to the World Bank file
+        sheetname(string): name of the sheet containing data
         yr (list): list of years to be dropped from the dataframe
 
     Returns:
         final_df (dataframe): clean dataframe with selected years
     """
-    df = pd.read_csv(filename, skiprows=2, header=1)  # read the data
+    df = pd.read_excel(filename,sheet_name=sheetname, skiprows=4)  # read the data
     # dropping the unwanted columns
-    ref_df = df.drop(df.columns[1:4], axis=1)
-    ref_df = ref_df.drop(df.columns[-1:], axis=1)
+    columns_to_drop = ['Country Code', 'Indicator Name', 'Indicator Code']
+    ref_df = df.drop(columns=columns_to_drop)
+    #ref_df = ref_df.drop(df.columns[-1:])
     # filtering the years
+    #print(ref_df.columns)
     final_df = ref_df.drop(columns=yr)
     # reseting the index
     final_df = final_df.reset_index(drop=True)
@@ -63,6 +66,7 @@ def Infographic(country, text, name):
              f'{first_value:.2f}', ha='center', va='bottom', color='black', fontsize=12)
     plt.text(co2_china_yr.columns[-1], last_value,
              f'{last_value:.2f}', ha='center', va='bottom', color='black', fontsize=12)
+    plt.gca().set_xticks([yr for yr in range(2011, 2021)])
     plt.title('CO2 emission in China (2011-2020)',
               fontweight='bold', fontsize=16)
     plt.ylabel('CO2 emissions(kt)', fontsize=13)
@@ -78,7 +82,7 @@ def Infographic(country, text, name):
     ele_heat_df = ele_heat[(ele_heat['Country Name'] == country)]
     renew_df = renew_cons[(renew_cons['Country Name'] == country)]
     dfs = [build_df, manuf_df, oth_sectors_df, transport_df, ele_heat_df]
-    china_data = [df.loc[df['Country Name'] == country, '2014'].values[0]
+    china_data = [df.loc[df['Country Name'] == country, 2014].values[0]
                   for df in dfs]
     sources1 = ['Residential buildings and\nCommercial and Public services',
                 'Manufacturing industries\nand Construction',
@@ -97,7 +101,7 @@ def Infographic(country, text, name):
 
     # pieplot2
     pie_dfs = [hydro, renew, ogc, nucl]
-    china_pie = [df.loc[df['Country Name'] == 'China', '2014'].values[0]
+    china_pie = [df.loc[df['Country Name'] == 'China', 2014].values[0]
                  for df in pie_dfs]
     sources = ['Hydro', 'Renewable Sources', 'Oil, Gas & Coal', 'Nuclear']
     plt.subplot(3, 2, 3)
@@ -124,11 +128,12 @@ def Infographic(country, text, name):
             else:
                 plt.text(year, value + 0.1, f'{value:.2f}%',
                          ha='center', va='bottom', color='black', fontsize=10)
+    plt.gca().set_xticks([yr for yr in range(2011, 2021)])
     plt.title('Renewable Energy Consumption\n(% of total final energy consumption)',
               fontweight='bold', fontsize=16)
     plt.xlabel('Year', fontsize=13)
     plt.ylabel('Renewable Enegry Consumption(%)', fontsize=13)
-    plt.ylim(11, 15.5, 0.5)
+    plt.ylim(11, 15.5)
     plt.legend(loc='upper center')
 
     # horizontal barchart
@@ -153,10 +158,10 @@ def Infographic(country, text, name):
                  va='center', ha='left', fontsize=12, fontweight='bold')
 
     #writing description and name
-    plt.text(0.73, 0.24, text, ha='center', va='center',
+    plt.text(0.5, 0.23, text, ha='left', va='center',
              transform=plt.gcf().transFigure, fontsize=14,
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
-    plt.text(0.73, 0.113, name, ha='center', va='center',
+    plt.text(0.73, 0.105, name, ha='center', va='center',
              transform=plt.gcf().transFigure, fontsize=14,
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
     #saving the figure
@@ -164,54 +169,48 @@ def Infographic(country, text, name):
 
 
 #filepaths
-co2_file = 'Data/co2.csv'
-ele_heat = 'Data/ele_heat.csv'
-manuf = 'Data/manuf.csv'
-oth_sectors = 'Data/oth_sectors.csv'
-transport = 'Data/transport.csv'
-building = 'Data/building.csv'
-renew_cons = 'Data/renew_cons.csv'
-hydro = 'Data/hydro_electric.csv'
-ogc = 'Data/oil_gas_coal.csv'
-renew = 'Data/renew.csv'
-nucl = 'Data/nuclear.csv'
-renew_prod = pd.read_csv('Data/modern-renewable-prod.csv')
+data_file='Main_Data.xlsx'
+
+#reading modern renewable products csv file
+renew_prod = pd.read_csv('modern-renewable-prod.csv')
 
 #filtering years
-yr_co2 = [str(year) for year in range(1960, 2011)] + [str(year)
+yr_co2 = [float(year) for year in range(1960, 2011)] + [float(year)
                                                       for year in range(2021, 2023)]
-yr_pie = [str(year) for year in range(1960, 2014)] + [str(year)
+yr_pie = [float(year) for year in range(1960, 2014)] + [float(year)
                                                       for year in range(2015, 2023)]
 yr_null = []
 
 #reading the dfs
-co2 = readFile(co2_file, yr_co2)
-ele_heat = readFile(ele_heat, yr_pie)
-manuf = readFile(manuf, yr_pie)
-oth_sectors = readFile(oth_sectors, yr_pie)
-transport = readFile(transport, yr_pie)
-build = readFile(building, yr_pie)
-hydro = readFile(hydro, yr_co2)
-ogc = readFile(ogc, yr_co2)
-renew = readFile(renew, yr_co2)
-nucl = readFile(nucl, yr_co2)
-renew_cons = readFile(renew_cons, yr_co2)
+co2 = readFile(data_file,'co2', yr_co2)
+ele_heat = readFile(data_file,'ele_heat', yr_pie)
+manuf = readFile(data_file,'manuf', yr_pie)
+oth_sectors = readFile(data_file,'oth_sectors', yr_pie)
+transport = readFile(data_file,'transport', yr_pie)
+build = readFile(data_file,'building', yr_pie)
+hydro = readFile(data_file,'hydro_electric', yr_co2)
+ogc = readFile(data_file,'oil_gas_coal', yr_co2)
+renew = readFile(data_file,'renew', yr_co2)
+nucl = readFile(data_file,'nuclear', yr_co2)
+renew_cons = readFile(data_file,'renew_cons', yr_co2)
 
 #description on the infographics
-text = """ 
-This infographics highlights China's CO2 emissions trends from 2011 to 
-2020. Emissions rose from 9.2 to around 11 million kilotons during this 
-period. In 2014, electricity and heat production contributedthe most, 
-52.3% of CO2 emissions. The second pie chart reveals that oil, gas and 
-coal constituted 75% of China's power generation in 2014, leading to 
-increased CO2 emissions.China is addressing this issue by increasing the 
-use of renewable energy sources. Notably, 18.6% of China's energy came 
-from hydroelectricity, with 4.1% from other renewables in 2014. Over 
-2011-2020, China increased renewable energy consumption from 11.34% 
-to 14.81%. By 2022, hydroelectricity and wind emerged as the primary 
-renewable sources, showcasing China's commitment to sustainable 
-development.
-"""
+text = """ This infographics highlights China's CO2 emissions trends from 2011 to 2020.
+> Emissions rose from 9.2 to around 11 million kilotons during this period. 
+> In 2014, electricity and heat production contributed the most, 52.3% of 
+   CO2 emissions. 
+> The electricity production distribution in China reveals that oil, gas 
+   and coal constituted 75% of China's power generation in 2014, leading to 
+   increased CO2 emissions.
+
+China is addressing this issue by increasing the use of renewable energy 
+sources. 
+> Notably, 18.6% of China's energy came from hydroelectricity, and 4.1% 
+   from other renewables in 2014. 
+> Over 2011-2020, China increased renewable energy consumption from 
+   11.34% to 14.81%. 
+> By 2022, hydroelectricity and wind emerged as the primary renewable 
+   sources, showcasing China's commitment to sustainable development."""
 
 #name and id
 name = """ Name : Sandra Binu
