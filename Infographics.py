@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def readFile(filename,sheetname, yr):
+def readFile(filename, sheetname, yr):
     """ function to read and clean a World Bank files
 
     Args:
@@ -20,7 +20,8 @@ def readFile(filename,sheetname, yr):
     Returns:
         final_df (dataframe): clean dataframe with selected years
     """
-    df = pd.read_excel(filename,sheet_name=sheetname, skiprows=4)  # read the data
+    df = pd.read_excel(filename, sheet_name=sheetname,
+                       skiprows=4)  # read the data
     # dropping the unwanted columns
     columns_to_drop = ['Country Code', 'Indicator Name', 'Indicator Code']
     ref_df = df.drop(columns=columns_to_drop)
@@ -39,13 +40,13 @@ def Infographic(country, text, name):
         text (string): analysed report
         name (string): name and id
     """
-    
+
     # initializing the figure
     fig = plt.figure(figsize=(18, 18), facecolor='#F0F0F0')
     plt.suptitle('CO2 Emission, Sources and Energy Analysis in China',
                  fontsize=28, y=0.94, fontweight='bold')
 
-    #filtering the country and years
+    # filtering the country and years
     co2_china = co2[co2['Country Name'] == country]
     co2_china_yr = co2_china.iloc[:, 1:]
     co2_china_series = co2_china_yr.squeeze()
@@ -70,7 +71,6 @@ def Infographic(country, text, name):
     plt.ylabel('CO2 emissions(kt)', fontsize=13)
     plt.xlabel('Year', fontsize=13)
     plt.ylim(9000000, 11080000)
-    plt.legend()
 
     # filtering the desired country from dfs
     build_df = build[(build['Country Name'] == country)]
@@ -91,7 +91,7 @@ def Infographic(country, text, name):
     plt.pie(china_data, autopct='%1.1f%%',
             pctdistance=0.8, startangle=90, explode=(0, 0, 0, 0, 0.03),
             colors=colors[3:], wedgeprops=dict(width=0.5),
-            textprops={'fontweight':'bold','fontsize':12})
+            textprops={'fontweight': 'bold', 'fontsize': 12})
     plt.title('China\'s CO2 Emission sources Distribution (2014)',
               fontweight='bold', fontsize=16)
     plt.legend(labels=sources1, loc='best', bbox_to_anchor=(
@@ -105,7 +105,7 @@ def Infographic(country, text, name):
     plt.subplot(3, 2, 3)
     plt.pie(china_pie, autopct='%1.1f%%', startangle=180,
             pctdistance=0.8, explode=(0.05, 0.1, 0, 0), colors=colors[3:],
-            wedgeprops=dict(width=0.5),textprops={'fontweight':'bold','fontsize':12})
+            wedgeprops=dict(width=0.5), textprops={'fontweight': 'bold', 'fontsize': 12})
     plt.title('Electricity Production Distribution in China (2014)',
               fontweight='bold', fontsize=16)
     plt.legend(labels=sources, loc='best', bbox_to_anchor=(
@@ -155,44 +155,44 @@ def Infographic(country, text, name):
         plt.text(bar.get_width(), bar.get_y() + bar.get_height() / 2, f'{value:.2f}',
                  va='center', ha='left', fontsize=12, fontweight='bold')
 
-    #writing description and name
+    # writing description and name
     plt.text(0.5, 0.2325, text, ha='left', va='center',
              transform=plt.gcf().transFigure, fontsize=14,
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
     plt.text(0.75, 0.105, name, ha='center', va='center',
              transform=plt.gcf().transFigure, fontsize=14, fontweight='bold',
              bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.5'))
-    #saving the figure
+    # saving the figure
     plt.savefig('22029960.png', dpi=300, bbox_inches='tight')
 
 
-#filepaths
-data_file='Main_Data.xlsx'
+# filepaths
+data_file = 'Main_Data.xlsx'
 
-#reading modern renewable products csv file
+# reading modern renewable products csv file
 renew_prod = pd.read_csv('modern-renewable-prod.csv')
 
-#filtering years
+# filtering years
 yr_co2 = [float(year) for year in range(1960, 2011)] + [float(year)
-                                                      for year in range(2021, 2023)]
+                                                        for year in range(2021, 2023)]
 yr_pie = [float(year) for year in range(1960, 2014)] + [float(year)
-                                                      for year in range(2015, 2023)]
+                                                        for year in range(2015, 2023)]
 yr_null = []
 
-#reading the dfs
-co2 = readFile(data_file,'co2', yr_co2)
-ele_heat = readFile(data_file,'ele_heat', yr_pie)
-manuf = readFile(data_file,'manuf', yr_pie)
-oth_sectors = readFile(data_file,'oth_sectors', yr_pie)
-transport = readFile(data_file,'transport', yr_pie)
-build = readFile(data_file,'building', yr_pie)
-hydro = readFile(data_file,'hydro_electric', yr_co2)
-ogc = readFile(data_file,'oil_gas_coal', yr_co2)
-renew = readFile(data_file,'renew', yr_co2)
-nucl = readFile(data_file,'nuclear', yr_co2)
-renew_cons = readFile(data_file,'renew_cons', yr_co2)
+# reading the dfs
+co2 = readFile(data_file, 'co2', yr_co2)
+ele_heat = readFile(data_file, 'ele_heat', yr_pie)
+manuf = readFile(data_file, 'manuf', yr_pie)
+oth_sectors = readFile(data_file, 'oth_sectors', yr_pie)
+transport = readFile(data_file, 'transport', yr_pie)
+build = readFile(data_file, 'building', yr_pie)
+hydro = readFile(data_file, 'hydro_electric', yr_co2)
+ogc = readFile(data_file, 'oil_gas_coal', yr_co2)
+renew = readFile(data_file, 'renew', yr_co2)
+nucl = readFile(data_file, 'nuclear', yr_co2)
+renew_cons = readFile(data_file, 'renew_cons', yr_co2)
 
-#description on the infographics
+# description on the infographics
 text = """ This infographics highlights China's CO2 emissions trends from 2011 to 2020.
 -> Emissions rose from 9.2 to around 11 million kilotons during this period. 
 -> In 2014, electricity and heat production contributed the most, 52.3% of 
@@ -210,9 +210,9 @@ sources.
 -> By 2022, hydroelectricity and wind emerged as the primary renewable 
     sources, showcasing China's commitment to sustainable development."""
 
-#name and id
+# name and id
 name = """ Name : Sandra Binu
       Student ID : 22029960 """
 
-#calling the function
+# calling the function
 Infographic('China', text, name)
